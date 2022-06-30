@@ -1,0 +1,103 @@
+<!-- contains only options to make line and rectangle wihtout changing color -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+
+    <style>
+        body {
+            margin: 20px;
+        }
+
+        .fas {
+            font-size: 2rem;
+            margin-right: 50px;
+            margin-left: 50px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- <h1>canvas example</h1> -->
+    <!-- drawing board -->
+    <!-- link for square icon copied from fontawesome -->
+    <i class="far fa-square-full"></i> 
+    <i class="fas fa-grip-lines-vertical"></i>
+    <!-- this is an inbuilt tag in html which helps us to create canvas or the 
+    area where we can draw or write -->
+    <canvas></canvas>
+</body>
+<!-- if i have to write javascript code in html then i have to write everything in script tag -->
+<script>
+    let canvasBoard=document.querySelector("canvas"); //with this line i m selecting the canvas area in the html page
+    let body =document.querySelector("body");
+    let squareTool=document.querySelector(".fa-square-full");
+    let lineTool=document.querySelector(".fa-grip-lines-vertical")
+    let currentTool="squareTool";
+
+    //beacuse default height and width is 150 and 300 px respectively
+    canvasBoard.height=window.innerHeight;
+    // canvasBoard.heigth=500; //aise bhi likh skte hai
+    canvasBoard.width=window.innerWidth;
+
+    // this line gives us the tool to draw on canvas
+    let tool=canvasBoard.getContext("2d");
+    
+    // this line will create a solid rectangle
+    // tool.fillStyle="red"; //color of rectangle
+    // tool.fillRect(100,0,300,300);
+
+    //this line creates a hollow rectangle
+    // tool.strokeStyle="green";
+    // tool.strokeRect(0,100,300,300);
+
+    squareTool.addEventListener("click" , function(){
+        currentTool="squareTool";
+    })
+    lineTool.addEventListener("click" , function(){
+        currentTool="lineTool";
+    })
+
+    // canavas board -> top point kitna niche hai 
+    let boardTop = canvasBoard.getBoundingClientRect().top;
+    // canavas board -> left  point kitna aage  hai 
+    let boardLeft = canvasBoard.getBoundingClientRect().left;
+
+    let Ix , Fx ,Iy , Fy;
+
+    //addEventListener listens to the event occured ...in this case event is mosue getting clicked
+    //then i can decide what to do when the event occurs
+    body.addEventListener("mousedown" , function(obj){//this fucntion takes an object by default and has alot of properties ...jisse hm khel skte hai
+        // alert("mouse was clicked"); //same as print statement but it gives alert instead
+        // console.log(obj); //obj describes the event that ocurred
+        Ix=obj.clientX - boardLeft ;
+        Iy=obj.clientY - boardTop;
+        // console.log(xpos , ypos);
+    });
+
+    body.addEventListener("mouseup" , function(obj){
+        // alert("mouse was lifted");
+        Fx=obj.clientX - boardLeft ; //as body and canvas ke coordinates alg jagah se shuru hote hai so to correct that
+        Fy=obj.clientY - boardTop;
+        let width=Fx - Ix;
+        let height=Fy-Iy;
+        if(currentTool=="squareTool"){    
+            tool.strokeRect(Ix , Iy , width , height);
+            console.log("square tool");
+        }
+        else{
+            tool.beginPath();
+            tool.moveTo(Ix, Iy);
+            tool.lineTo(Fx, Fy);
+            tool.stroke();
+            console.log("Pencil tool");
+        }
+        // console.log(xpos , ypos);
+    });
+
+</script>
+</html>

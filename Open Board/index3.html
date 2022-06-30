@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index 3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style3.css">
+</head>
+
+<body>
+    <div class="toolbar">
+        
+        <div class="tool" id="pencil">
+            <!-- alt="" has no use idk y it is there -->
+            <img src="./NewIcons/Black_Pencil.svg" alt="" class="tool-img"> 
+            <div class="size-box">
+                <!-- .size1+.size2+.size3 -->
+                <div class="size1 size"></div>
+                <div class="size2 size"></div>
+                <div class="size3 size"></div>
+                <div class="size4 size"></div>
+            </div>
+
+        </div>
+        
+        
+        <div class="tool" id="rect">
+            <i class="fas fa-square"></i>
+            <div class="size-box">
+                <!-- .size1+.size2+.size3 -->
+                <div class="size1 size"></div>
+                <div class="size2 size"></div>
+                <div class="size3 size"></div>
+                <div class="size4 size"></div>
+            </div>
+        </div>
+        
+        
+        <div class="tool" class="line">
+            <i class="fas fa-grip-lines-vertical"></i>
+            <div class="size-box">
+                <!-- .size1+.size2+.size3 -->
+                <div class="size1 size"></div>
+                <div class="size2 size"></div>
+                <div class="size3 size"></div>
+                <div class="size4 size"></div>
+            </div>
+        </div>
+        
+        <div class="tool" id="eraser">
+            <img src="./NewIcons/Eraser.svg" alt="" class="tool-img">
+            <div class="size-box">
+                <!-- .size1+.size2+.size3 -->
+                <div class="size1 size"></div>
+                <div class="size2 size"></div>
+                <div class="size3 size"></div>
+                <div class="size4 size"></div>
+            </div>
+        </div>
+        
+        <img src="./NewIcons/StickyNote.svg" alt="" class="tool-img">
+        <!-- <img src="./NewIcons/Photo.svg" alt="" class="tool-img"> -->
+
+        <!-- single unit-->
+        <div class="color-container">
+            <!-- .color*3 -->
+            <div class="color red"></div>
+            <div class="color blue"></div>
+            <div class="color green"></div>
+        </div>
+
+    </div>
+    <canvas></canvas>
+</body>
+<!-- if i have to write javascript code in html then i have to write everything in script tag -->
+
+<!-- script to select various parts of html  -->
+<script>
+    let canvasBoard = document.querySelector("canvas");
+    let rectTool = document.querySelector(".fa-square");
+    let lineTool = document.querySelector(".fa-grip-lines-vertical");
+    let eraserTool=document.querySelector("#eraser");
+    let cTool = "pencilArea";
+    // default height width is smaller 
+    canvasBoard.height = window.innerHeight;
+    //canvasBoard.height=500px ; aise bhi likh skte the
+    canvasBoard.width=window.innerWidth;
+
+    // this line gives you the tool to draw on that canvas
+    let tool = canvasBoard.getContext("2d");
+
+    //from line 125 -146 this to chnage the color
+    let redArea=document.querySelector(".red");
+    let blueArea=document.querySelector(".blue");
+    let greenArea=document.querySelector(".green");
+    let pencilArea=document.querySelector("#pencil");
+
+    let body = document.querySelector("body");
+    // tool change logic
+ 
+    // canavas board -> top point kitna niche hai 
+    let boardTop = canvasBoard.getBoundingClientRect().top;
+    // canavas board -> left  point kitna aage  hai 
+    let boardLeft = canvasBoard.getBoundingClientRect().left;
+    // let boardLeft=0;
+    
+    let iX, iY, fX, fY;
+
+</script>
+
+<!-- script to change the color and to change the tool -->
+<script>
+        redArea.addEventListener("click" , function(obj){
+            console.log("red was clicked");
+            tool.strokeStyle="red";
+        });
+        
+        blueArea.addEventListener("click" , function(obj){
+            console.log("blue was clicked");
+            tool.strokeStyle="blue";
+        });
+
+        greenArea.addEventListener("click" , function(obj){
+            console.log("green was clicked");
+            tool.strokeStyle="lawngreen";
+        });
+
+        rectTool.addEventListener("click", function () {
+            tool.strokeStyle="black";
+            tool.lineWidth=1;
+            console.log("rectangle clicked");  //it is working
+            cTool = "rectTool";
+        })
+
+        lineTool.addEventListener("click", function () {
+            tool.strokeStyle="black";
+            tool.lineWidth=1;
+            console.log("line clicked");
+            cTool = "lineTool";
+        })
+
+        pencilArea.addEventListener("click" , function(obj){
+            tool.strokeStyle="black";
+            tool.lineWidth=1;
+            console.log("pencil clicked");
+            cTool= "pencilArea";
+        })
+        eraserTool.addEventListener("click" , function(obj){
+            console.log("eraser clicked");
+            cTool="eraserTool";
+        })
+
+</script>
+
+<!-- script to draw rectangles and lines , eraser and pencil-->
+<script>
+
+    let drawingBoard=false;
+
+     canvasBoard.addEventListener("mousedown", function (e) {
+        // alert("mouse was clicked"); //same as print statement but it gives alert instead
+        // console.log(obj); //obj describes the event that ocurred
+            drawingBoard=true;
+            iX = e.clientX-boardLeft;
+            iY = e.clientY -boardTop;
+            if(cTool=="pencilArea"){
+                console.log("pencil is selected");
+                tool.beginPath();
+                tool.moveTo(e.clientX-boardLeft , e.clientY-boardTop);
+            }
+            else if(cTool=="eraserTool"){
+                console.log("eraser is selected");
+                tool.beginPath();
+                tool.moveTo(e.clientX-boardLeft , e.clientY-boardTop);
+            }
+        })
+
+
+            canvasBoard.addEventListener("mousemove" , function(e){
+                if(cTool=="pencilArea"){
+                    if(drawingBoard==false){
+                        return;
+                    }
+                    fX = e.clientX-boardLeft;
+                    fY = e.clientY - boardTop;
+                    tool.lineTo(fX , fY);
+                    tool.stroke();
+                    iX=fX;
+                    iY=fY;
+                }
+                else if(cTool=="eraserTool"){
+                    if(drawingBoard==false){
+                        return;
+                    }
+                    tool.strokeStyle="white";
+                    fX = e.clientX-boardLeft;
+                    fY = e.clientY - boardTop;
+                    tool.lineTo(fX , fY);
+                    tool.stroke();
+                    iX=fX;
+                    iY=fY;
+                    tool.lineWidth=25;
+                }
+                })
+
+     canvasBoard.addEventListener("mouseup", function (e) {
+        // console.log(e);
+        drawingBoard=false;
+        fX = e.clientX - boardLeft;
+        fY = e.clientY - boardTop;
+        let width = fX - iX;
+        let height = fY - iY;
+        if (cTool == "rectTool") {
+            tool.strokeRect(iX, iY, width, height);
+        } 
+        else if(cTool=="lineTool") {
+            tool.beginPath();
+            tool.moveTo(iX, iY);
+            tool.lineTo(fX, fY);
+            tool.stroke();
+            // console.log("Pencil tool is pending")
+        }
+    })
+        
+</script>
+
+</html>
